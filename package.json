@@ -6,7 +6,7 @@
   "scripts": {
     "start": "PORT=3001 nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint --fix"
+    "eslint": "eslint src/*.* --fix"
   },
   "author": "",
   "license": "ISC",

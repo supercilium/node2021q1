@@ -2,7 +2,7 @@ import express from 'express';
 import { User } from 'types';
 import { USERS } from './users';
 
-import * as Joi from 'joi'
+import * as Joi from 'joi';
 import {
     ContainerTypes,
     // Use this as a replacement for express.Request
@@ -11,17 +11,17 @@ import {
     ValidatedRequestSchema,
     // Creates a validator that generates middlewares
     createValidator
-} from 'express-joi-validation'
+} from 'express-joi-validation';
 
-const validator = createValidator()
+const validator = createValidator();
 
 const bodySchema = Joi.object<User>({
     id: Joi.string().required(),
     login: Joi.string().required(),
     password: Joi.string().regex(/(?=.*[a-zA-Z])(?=.*[0-9])/).required(),
     age: Joi.number().greater(4).less(130).required(),
-    isDeleted: Joi.boolean().required(),
-})
+    isDeleted: Joi.boolean().required()
+});
 
 interface UserRequestSchema extends ValidatedRequestSchema {
     [ContainerTypes.Query]: User;
@@ -37,7 +37,7 @@ router.use(express.json());
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    const user: User = USERS.find(user => user.id === id)
+    const user: User = USERS.find(elem => elem.id === id);
     if (user?.id) {
         res.send(user);
     } else {
@@ -47,7 +47,7 @@ router.get('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
-    const user: User = USERS.find(user => user.id === id)
+    const user: User = USERS.find(elem => elem.id === id);
     if (user?.id) {
         user.isDeleted = true;
         res.send(user);
@@ -63,7 +63,7 @@ router.post(
         const { ...user } = req.body;
         const userToUpdate = USERS.findIndex(elem => elem.id === user.id);
         if (userToUpdate >= 0) {
-            USERS[userToUpdate] = { ...user }
+            USERS[userToUpdate] = { ...user };
             res.send(`Updated user ${USERS[userToUpdate].login}`);
         } else {
             const newUser: User = user;
@@ -76,7 +76,7 @@ router.post(
 router.get('/filter/:str', (req, res) => {
     const { str } = req.params;
     res.send(getAutoSuggestUsers(String(str), USERS));
-})
+});
 
 const getAutoSuggestUsers = (loginSubstring: string, limit: User[]) => {
     const filteredUsers: User[] = limit.
@@ -84,8 +84,8 @@ const getAutoSuggestUsers = (loginSubstring: string, limit: User[]) => {
         sort((a, b) => a.login <= b.login ? -1 : 1);
 
     return filteredUsers;
-}
+};
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+    console.log(`Example app listening at http://localhost:${port}`);
+});
