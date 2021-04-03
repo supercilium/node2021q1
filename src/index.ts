@@ -64,12 +64,11 @@ router.post<null, any, User>(
     '/',
     validator.body(bodySchema),
     (req: ValidatedRequest<UserRequestSchema>, res) => {
-        console.log(req.body)
-        const user = req.body;
-        const userToUpdate = USERS.findIndex(elem => elem.login === user.login);
+        const { body } = req;
+        const userToUpdate = USERS.findIndex(elem => elem.login === body.login);
         if (userToUpdate >= 0) {
-            USERS[userToUpdate] = { ...USERS[userToUpdate], ...user };
-            res.send(`Updated user ${USERS[userToUpdate].login}`);
+            USERS[userToUpdate] = { ...USERS[userToUpdate], ...body };
+            res.send(`Updated user ${body.login}`);
         } else {
             res.sendStatus(404);
         }
@@ -79,8 +78,9 @@ router.put<null, any, User>(
     '/',
     validator.body(bodySchema),
     (req: ValidatedRequest<UserRequestSchema>, res) => {
-        USERS.push({ ...req.body, isDeleted: false, id: uniqid() });
-        res.send(`Added new user: ${req.body.login}`);
+        const { body } = req;
+        USERS.push({ ...body, isDeleted: false, id: uniqid() });
+        res.send(`Added new user: ${body.login}`);
     });
 
 const getAutoSuggestUsers = (loginSubstring: string, limit: number): User[] => {
