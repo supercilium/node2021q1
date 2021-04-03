@@ -1,6 +1,6 @@
-import { User } from 'types';
+import { UserFull } from 'types';
 
-export const USERS: User[] = [
+export const USERS: UserFull[] = [
     {
         'id': '6FUgnb_w',
         'login': 'Tyrique.Denesik36',

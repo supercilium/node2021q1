@@ -1,5 +1,6 @@
 import express from 'express';
-import { User } from 'types';
+import uniqid from 'uniqid';
+import { User, UserFull, ParamsWithId, ParamsWithFilter } from 'types';
 import { USERS } from './users';
 
 import * as Joi from 'joi';
@@ -16,11 +17,9 @@ import {
 const validator = createValidator();
 
 const bodySchema = Joi.object<User>({
-    id: Joi.string().required(),
     login: Joi.string().required(),
     password: Joi.string().regex(/(?=.*[a-zA-Z])(?=.*[0-9])/).required(),
     age: Joi.number().greater(4).less(130).required(),
-    isDeleted: Joi.boolean().required()
 });
 
 interface UserRequestSchema extends ValidatedRequestSchema {
@@ -35,9 +34,14 @@ const app = express().use('/user', router);
 router.use(express.urlencoded());
 router.use(express.json());
 
-router.get('/:id', (req, res) => {
+router.get<null, any, any, ParamsWithFilter>('/filter', (req, res) => {
+    const { filter, limit } = req.query;
+    res.send(getAutoSuggestUsers(filter, Number(limit)));
+});
+
+router.get<ParamsWithId>('/:id', (req, res) => {
     const { id } = req.params;
-    const user: User = USERS.find(elem => elem.id === id);
+    const user: UserFull = USERS.find(elem => elem.id === id);
     if (user?.id) {
         res.send(user);
     } else {
@@ -45,9 +49,9 @@ router.get('/:id', (req, res) => {
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete<ParamsWithId>('/:id', (req, res) => {
     const { id } = req.params;
-    const user: User = USERS.find(elem => elem.id === id);
+    const user: UserFull = USERS.find(elem => elem.id === id);
     if (user?.id) {
         user.isDeleted = true;
         res.send(user);
@@ -56,34 +60,35 @@ router.delete('/:id', (req, res) => {
     }
 });
 
-router.post(
+router.post<null, any, User>(
     '/',
     validator.body(bodySchema),
     (req: ValidatedRequest<UserRequestSchema>, res) => {
-        const { ...user } = req.body;
-        const userToUpdate = USERS.findIndex(elem => elem.id === user.id);
+        console.log(req.body)
+        const user = req.body;
+        const userToUpdate = USERS.findIndex(elem => elem.login === user.login);
         if (userToUpdate >= 0) {
-            USERS[userToUpdate] = { ...user };
+            USERS[userToUpdate] = { ...USERS[userToUpdate], ...user };
             res.send(`Updated user ${USERS[userToUpdate].login}`);
         } else {
-            const newUser: User = user;
-            USERS.push(newUser);
-            res.send(`Added new user: ${newUser.login} with id: ${newUser.id}`);
+            res.sendStatus(404);
         }
     });
 
+router.put<null, any, User>(
+    '/',
+    validator.body(bodySchema),
+    (req: ValidatedRequest<UserRequestSchema>, res) => {
+        USERS.push({ ...req.body, isDeleted: false, id: uniqid() });
+        res.send(`Added new user: ${req.body.login}`);
+    });
 
-router.get('/filter/:str', (req, res) => {
-    const { str } = req.params;
-    res.send(getAutoSuggestUsers(String(str), USERS));
-});
-
-const getAutoSuggestUsers = (loginSubstring: string, limit: User[]) => {
-    const filteredUsers: User[] = limit.
-        filter(elem => elem.login.indexOf(loginSubstring) >= 0).
+const getAutoSuggestUsers = (loginSubstring: string, limit: number): User[] => {
+    const filteredUsers: User[] = USERS.
+        filter(elem => elem.login.includes(loginSubstring)).
         sort((a, b) => a.login <= b.login ? -1 : 1);
 
-    return filteredUsers;
+    return filteredUsers.slice(0, limit);
 };
 
 app.listen(port, () => {
