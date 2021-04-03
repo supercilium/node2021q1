@@ -2,13 +2,6 @@ import { UserFull } from 'types';
 
 export const USERS: UserFull[] = [
     {
-        'id': '6FUgnb_w',
-        'login': 'Tyrique.Denesik36',
-        'password': 'Zy8d9C9SApmItdf',
-        'age': 123,
-        'isDeleted': true
-    },
-    {
         'id': '1leWI-Zd',
         'login': 'Deontae_Jacobson',
         'password': 'SwB20NTGFeN2BR2',
