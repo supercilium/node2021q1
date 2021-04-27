@@ -15,7 +15,7 @@ usersRouter.use(json());
 usersRouter.get<null, any, any, ParamsWithFilter>('/filter', async (req, res) => {
     try {
         const { filter, limit } = req.query;
-        const users = await new UserService().getAutoSuggestUsers(filter, Number(limit));
+        const users = await UserService.getAutoSuggestUsers(filter, Number(limit));
 
         res.send(users)
     } catch (e) {
@@ -26,7 +26,7 @@ usersRouter.get<null, any, any, ParamsWithFilter>('/filter', async (req, res) =>
 usersRouter.get<ParamsWithId>('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await new UserService().getUserById(id);
+        const user = await UserService.getUserById(id);
 
         res.send(user);
     } catch (e) {
@@ -37,7 +37,7 @@ usersRouter.get<ParamsWithId>('/:id', async (req, res) => {
 usersRouter.delete<ParamsWithId>('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await new UserService().deleteUserById(id);
+        const user = await UserService.deleteUserById(id);
 
         res.send(user);
     } catch (e) {
@@ -52,9 +52,7 @@ usersRouter.post<null, any, UserCreationAttributes>(
         try {
             const { body } = req;
 
-            const userService = new UserService();
-
-            const user = await userService.addUser(body)
+            const user = await UserService.addUser(body)
             res.send(user);
         } catch (e) {
             res.status(500);
@@ -68,9 +66,7 @@ usersRouter.put<null, any, UserCreationAttributes>(
         try {
             const { body } = req;
 
-            const userService = new UserService();
-
-            const user = await userService.addUser(body)
+            const user = await UserService.addUser(body)
             res.send(user);
         } catch (e) {
             res.status(500);

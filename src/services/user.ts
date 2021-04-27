@@ -11,9 +11,9 @@ export default class UserService {
   //   private salaryModel) { }
   // constructor(private user: User) { }
 
-  public async getUserById(id: string) {
+  public static async getUserById(id: string) {
     try {
-      const userRecord: UserInterface[] = await User.findAll({
+      const userRecord = await User.findOne({
         where: {
           id: id,
         },
@@ -24,7 +24,7 @@ export default class UserService {
       throw (e);
     }
   }
-  public async deleteUserById(id: string) {
+  public static async deleteUserById(id: string) {
     try {
       const userRecord = await User.update({ isDeleted: true }, {
         where: {
@@ -37,24 +37,24 @@ export default class UserService {
       throw (e);
     }
   }
-  public async addUser(data: UserCreationAttributes) {
+  public static async addUser(data: UserCreationAttributes) {
     try {
-      const user: UserInterface = await User.create({ ...data, isDeleted: false });
+      const user = await User.create({ ...data, isDeleted: false });
       return user;
     } catch (e) {
       throw (e);
     }
 
   }
-  public async getAutoSuggestUsers(loginSubstring: string, limit: number) {
+  public static async getAutoSuggestUsers(loginSubstring: string, limit: number) {
     try {
-      const filteredUsers: UserInterface[] = await User.findAll({
+      const filteredUsers = await User.findAll({
         where: {
           login: {
             [Op.like]: `%${loginSubstring}%`,
           }
         },
-        limit: limit,
+        limit,
         order: [
           ['login', 'ASC'],
         ],
