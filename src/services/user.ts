@@ -11,7 +11,7 @@ export default class UserService {
   //   private salaryModel) { }
   // constructor(private user: User) { }
 
-  public static async getUserById(id: string) {
+  public async getUserById(id: string) {
     try {
       const userRecord = await User.findOne({
         where: {
@@ -24,7 +24,7 @@ export default class UserService {
       throw (e);
     }
   }
-  public static async deleteUserById(id: string) {
+  public async deleteUserById(id: string) {
     try {
       const userRecord = await User.update({ isDeleted: true }, {
         where: {
@@ -37,7 +37,7 @@ export default class UserService {
       throw (e);
     }
   }
-  public static async addUser(data: UserCreationAttributes) {
+  public async addUser(data: UserCreationAttributes) {
     try {
       const user = await User.create({ ...data, isDeleted: false });
       return user;
@@ -46,7 +46,7 @@ export default class UserService {
     }
 
   }
-  public static async getAutoSuggestUsers(loginSubstring: string, limit: number) {
+  public async getAutoSuggestUsers(loginSubstring: string, limit: number) {
     try {
       const filteredUsers = await User.findAll({
         where: {
