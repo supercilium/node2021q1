@@ -1,4 +1,4 @@
-import { UserInterface, UserCreationAttributes } from "types/user";
+import { UserCreationAttributes } from "../types/user";
 import { User } from '../models/user';
 import { Op } from 'sequelize';
 // import { Service } from 'typedi';
