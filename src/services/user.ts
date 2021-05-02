@@ -65,5 +65,4 @@ export default class UserService {
       throw (e);
     }
   };
-
 }

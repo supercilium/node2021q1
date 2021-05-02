@@ -1,7 +1,7 @@
 import 'reflect-metadata'; // We need this in order to use @Decorators
 import express, { urlencoded, json } from 'express';
 
-import { usersRouter, groupRouter } from './api/routers';
+import { usersRouter, groupRouter, userGroupRouter } from './api/routers';
 import { sequelize } from './configs/sequalize';
 
 const port = process.env.PORT || 3001;
@@ -12,6 +12,7 @@ const startServer = async () => {
   app.use(json());
   app.use('/group', groupRouter);
   app.use('/user', usersRouter);
+  app.use('/user-group', userGroupRouter);
 
   try {
     await sequelize.authenticate();

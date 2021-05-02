@@ -1,15 +1,22 @@
 import {
   Model,
   DataTypes,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManySetAssociationsMixin,
 } from "sequelize";
 import { GroupInterface, Permission, GroupCreatingInterface } from "../types/group";
 import { sequelize } from '../configs/sequalize';
+import { User } from "./user";
+import { UserGroup } from "./userGroup";
 
 export class Group extends Model<GroupInterface, GroupCreatingInterface>
   implements GroupCreatingInterface {
   public id!: string;
   public name!: string;
   public permission!: Permission[];
+
+  public getUsers!: BelongsToManyGetAssociationsMixin<User>;
+  public setUsers!: BelongsToManySetAssociationsMixin<User, string>;
 }
 
 Group.init(
@@ -34,3 +41,6 @@ Group.init(
     sequelize,
   }
 );
+
+Group.belongsToMany(User, { through: UserGroup, onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+User.belongsToMany(Group, { through: UserGroup, onDelete: 'CASCADE',  onUpdate: 'CASCADE'  });

@@ -4,7 +4,6 @@ import {
 } from "sequelize";
 import { UserInterface, UserCreationAttributes } from "../types/user";
 import { sequelize } from '../configs/sequalize';
-import { Group } from "./group";
 
 export class User extends Model<UserInterface, UserCreationAttributes>
   implements UserCreationAttributes {
@@ -48,6 +47,3 @@ User.init(
     sequelize, // passing the `sequelize` instance is required
   }
 );
-
-Group.belongsToMany(User, { through: 'UserGroup', timestamps: false });
-User.belongsToMany(Group, { through: 'UserGroup', timestamps: false });
