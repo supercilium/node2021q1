@@ -24,10 +24,12 @@ export default class UserGroupService {
           transaction: t
         })
 
-        await group.setUsers(users);
+        await group.setUsers(users, { transaction: t });
+
+        return group;
       });
 
-      return result;
+      return result.getUsers({ joinTableAttributes: [] });
     } catch (error) {
       throw (error);
     }
