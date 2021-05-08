@@ -11,8 +11,8 @@ userGroupRouter.put<null, any, { groupId: string; userIds: string[] }>(
     try {
       const { body } = req;
 
-      const user = await userGroupService.addUsersToGroup(body.groupId, body.userIds);
-      res.send(user);
+      const data = await userGroupService.addUsersToGroup(body.groupId, body.userIds);
+      res.send(data);
     } catch (e) {
       res.status(500);
     }
