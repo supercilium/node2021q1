@@ -8,6 +8,7 @@ import { GroupInterface, Permission, GroupCreatingInterface } from "../types/gro
 import { sequelize } from '../configs/sequalize';
 import { User } from "./user";
 import { UserGroup } from "./userGroup";
+import { PERMISSIONS } from "../constants";
 
 export class Group extends Model<GroupInterface, GroupCreatingInterface>
   implements GroupCreatingInterface {
@@ -32,7 +33,7 @@ Group.init(
       unique: true,
     },
     permission: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.ENUM({ values: PERMISSIONS }),
       allowNull: false,
     },
   },
@@ -42,5 +43,5 @@ Group.init(
   }
 );
 
-Group.belongsToMany(User, { through: UserGroup, onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-User.belongsToMany(Group, { through: UserGroup, onDelete: 'CASCADE',  onUpdate: 'CASCADE'  });
+Group.belongsToMany(User, { as: 'users', through: UserGroup, onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+User.belongsToMany(Group, { through: UserGroup, onDelete: 'CASCADE', onUpdate: 'CASCADE' });

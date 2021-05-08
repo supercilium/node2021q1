@@ -4,11 +4,7 @@ import { GroupCreatingInterface } from 'types';
 export default class GroupService {
   public async getGroupById(id: string) {
     try {
-      const groupRecord = await Group.findOne({
-        where: {
-          id: id,
-        },
-      });
+      const groupRecord = await Group.findByPk(id);
 
       return groupRecord;
     } catch (e) {

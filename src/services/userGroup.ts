@@ -29,6 +29,21 @@ export default class UserGroupService {
         return group;
       });
 
+      // const group = await Group.findOne({
+      //   where: {
+      //     id: groupId,
+      //   },
+      //   include: [
+      //     {
+      //       association: 'users',
+      //       through: {
+      //         attributes: []
+      //       }
+      //     }
+      //   ]
+      // })
+
+      // return group;
       return result.getUsers({ joinTableAttributes: [] });
     } catch (error) {
       throw (error);

@@ -4,6 +4,7 @@ import {
   createValidator
 } from 'express-joi-validation';
 import { UserCreationAttributes, GroupCreatingInterface, Permission } from '../../types';
+import { PERMISSIONS } from '../../constants';
 
 export const validator = createValidator();
 
@@ -18,7 +19,7 @@ export const userBodyValidator = validator.body(bodySchemaUser)
 
 export const bodySchemaGroup = Joi.object<GroupCreatingInterface>({
   name: Joi.string().required(),
-  permission: Joi.array().items(Joi.string()).required(),
+  permission: Joi.array().items(Joi.string().valid(...PERMISSIONS)).required(),
 });
 
 export const groupBodyValidator = validator.body(bodySchemaGroup)
