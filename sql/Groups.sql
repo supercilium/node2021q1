@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS "Groups";
+CREATE TYPE Permissions AS ENUM ('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES');
+CREATE TABLE IF NOT EXISTS "Groups"(
+   id        UUID NOT NULL PRIMARY KEY
+  ,name     VARCHAR(255) NOT NULL UNIQUE
+  ,permission  Permissions[] NOT NULL
+);
+INSERT INTO "Groups"(id,name,permission) VALUES
+('a259109d-a406-49b4-8eaa-a165fd22d69a','adm', '{READ,WRITE,DELETE,SHARE,UPLOAD_FILES}')
+,('318d0b25-a040-4412-a40a-e7749083157a', 'usr', '{READ}');
+

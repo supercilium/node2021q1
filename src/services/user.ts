@@ -1,4 +1,4 @@
-import { UserInterface, UserCreationAttributes } from "types/user";
+import { UserCreationAttributes } from "../types/user";
 import { User } from '../models/user';
 import { Op } from 'sequelize';
 // import { Service } from 'typedi';
@@ -13,11 +13,7 @@ export default class UserService {
 
   public async getUserById(id: string) {
     try {
-      const userRecord = await User.findOne({
-        where: {
-          id: id,
-        },
-      });
+      const userRecord = await User.findByPk(id);
 
       return userRecord;
     } catch (e) {
@@ -65,5 +61,4 @@ export default class UserService {
       throw (e);
     }
   };
-
 }

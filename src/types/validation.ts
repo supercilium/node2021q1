@@ -1,10 +1,14 @@
 import {
-    ContainerTypes,
-    // Extend from this to define a valid schema type/interface
-    ValidatedRequestSchema,
+  ContainerTypes,
+  // Extend from this to define a valid schema type/interface
+  ValidatedRequestSchema,
 } from "express-joi-validation";
-import { UserInterface } from "types/user";
+import { UserInterface, GroupCreatingInterface } from "../types";
 
 export interface UserRequestSchema extends ValidatedRequestSchema {
-    [ContainerTypes.Query]: UserInterface;
+  [ContainerTypes.Body]: UserInterface;
+}
+
+export interface GroupRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Body]: GroupCreatingInterface;
 }

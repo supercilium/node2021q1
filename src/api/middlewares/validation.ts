@@ -1,17 +1,25 @@
 import * as Joi from 'joi';
 import {
-    // Creates a validator that generates middlewares
-    createValidator
+  // Creates a validator that generates middlewares
+  createValidator
 } from 'express-joi-validation';
-import { UserCreationAttributes } from 'types/user';
+import { UserCreationAttributes, GroupCreatingInterface, Permission } from '../../types';
+import { PERMISSIONS } from '../../constants';
 
 export const validator = createValidator();
 
 
-export const bodySchema = Joi.object<UserCreationAttributes>({
-    login: Joi.string().required(),
-    password: Joi.string().regex(/(?=.*[a-zA-Z])(?=.*[0-9])/).required(),
-    age: Joi.number().greater(4).less(130).required(),
+export const bodySchemaUser = Joi.object<UserCreationAttributes>({
+  login: Joi.string().required(),
+  password: Joi.string().regex(/(?=.*[a-zA-Z])(?=.*[0-9])/).required(),
+  age: Joi.number().greater(4).less(130).required(),
 });
 
-export const userBodyValidator = validator.body(bodySchema)
+export const userBodyValidator = validator.body(bodySchemaUser)
+
+export const bodySchemaGroup = Joi.object<GroupCreatingInterface>({
+  name: Joi.string().required(),
+  permission: Joi.array().items(Joi.string().valid(...PERMISSIONS)).required(),
+});
+
+export const groupBodyValidator = validator.body(bodySchemaGroup)

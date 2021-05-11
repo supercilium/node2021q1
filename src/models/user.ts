@@ -2,7 +2,7 @@ import {
   Model,
   DataTypes,
 } from "sequelize";
-import { UserInterface, UserCreationAttributes } from "types/user";
+import { UserInterface, UserCreationAttributes } from "../types/user";
 import { sequelize } from '../configs/sequalize';
 
 export class User extends Model<UserInterface, UserCreationAttributes>
@@ -35,7 +35,7 @@ User.init(
       allowNull: false,
     },
     age: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     isDeleted: {
@@ -44,7 +44,6 @@ User.init(
     }
   },
   {
-    tableName: "users",
     sequelize, // passing the `sequelize` instance is required
   }
 );
