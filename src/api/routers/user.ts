@@ -8,63 +8,65 @@ export const usersRouter = Router();
 
 const userService = new UserService();
 
-usersRouter.get<null, any, any, ParamsWithFilter>('/filter', async (req, res) => {
+usersRouter.get<null, any, any, ParamsWithFilter>('/filter', async (req, res, next) => {
   try {
     const { filter, limit } = req.query;
     const users = await userService.getAutoSuggestUsers(filter, Number(limit));
 
-    res.send(users)
+    res.send(users);
   } catch (e) {
-    res.sendStatus(500);
+    return next(e);
   }
 });
 
-usersRouter.get<ParamsWithId>('/:id', async (req, res) => {
+usersRouter.get<ParamsWithId>('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userService.getUserById(id);
 
     res.send(user);
   } catch (e) {
-    res.sendStatus(500);
+    return next(e);
   }
 });
 
-usersRouter.delete<ParamsWithId>('/:id', async (req, res) => {
+usersRouter.delete<ParamsWithId>('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userService.deleteUserById(id);
 
     res.send(user);
   } catch (e) {
-    res.sendStatus(500);
+    return next(e);
   }
 });
 
 usersRouter.post<null, any, UserCreationAttributes>(
   '/',
   userBodyValidator,
-  async (req: ValidatedRequest<UserRequestSchema>, res) => {
+  async (req: ValidatedRequest<UserRequestSchema>, res, next) => {
     try {
       const { body } = req;
 
-      const user = await userService.addUser(body)
+      const user = await userService.addUser(body);
+
       res.send(user);
     } catch (e) {
-      res.status(500);
+      return next(e);
     }
   });
 
 usersRouter.put<null, any, UserCreationAttributes>(
   '/',
   userBodyValidator,
-  async (req: ValidatedRequest<UserRequestSchema>, res) => {
+  async (req: ValidatedRequest<UserRequestSchema>, res, next) => {
     try {
       const { body } = req;
 
-      const user = await userService.addUser(body)
+      const user = await userService.addUser(body);
+
       res.send(user);
     } catch (e) {
-      res.status(500);
+      return next(e);
     }
   });

@@ -1,17 +1,19 @@
 import { Group } from '../models/group';
 import { GroupCreatingInterface } from 'types';
+import { logger } from '../configs';
 
 export default class GroupService {
-  public async getGroupById(id: string) {
+  async getGroupById(id: string) {
     try {
-      const groupRecord = await Group.findByPk(id);
+      const groupRecord = await Group.findByPk(id, { rejectOnEmpty: true });
 
       return groupRecord;
     } catch (e) {
+      logger.debug(e);
       throw (e);
     }
   }
-  public async getAllGroups() {
+  async getAllGroups() {
     try {
       const groupRecord = await Group.findAll({});
 
@@ -20,12 +22,12 @@ export default class GroupService {
       throw (e);
     }
   }
-  public async deleteGroupById(id: string) {
+  async deleteGroupById(id: string) {
     try {
       const statusCode = await Group.destroy({
         where: {
-          id: id,
-        },
+          id
+        }
       });
 
       return statusCode;
@@ -33,7 +35,7 @@ export default class GroupService {
       throw (e);
     }
   }
-  public async addGroup(data: GroupCreatingInterface) {
+  async addGroup(data: GroupCreatingInterface) {
     try {
       const groupRecord = await Group.create({ ...data });
       return groupRecord;
@@ -41,11 +43,11 @@ export default class GroupService {
       throw (e);
     }
   }
-  public async updateGroup(id: string, data: GroupCreatingInterface) {
+  async updateGroup(id: string, data: GroupCreatingInterface) {
     try {
       const groupRecord = await Group.update({ ...data }, {
         where: {
-          id: id
+          id
         }
       });
       return groupRecord;
@@ -53,5 +55,4 @@ export default class GroupService {
       throw (e);
     }
   }
-
 }

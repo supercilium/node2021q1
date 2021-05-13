@@ -1,4 +1,4 @@
-import { Optional } from "sequelize/types";
+import { Optional } from 'sequelize/types';
 
 export interface UserInterface {
     login: string;
@@ -8,4 +8,4 @@ export interface UserInterface {
     id: string;
 }
 
-export interface UserCreationAttributes extends Optional<UserInterface, 'id' | 'isDeleted'> {};
+export interface UserCreationAttributes extends Optional<UserInterface, 'id' | 'isDeleted'> {}

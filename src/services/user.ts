@@ -1,6 +1,7 @@
-import { UserCreationAttributes } from "../types/user";
+import { UserCreationAttributes } from '../types/user';
 import { User } from '../models/user';
 import { Op } from 'sequelize';
+
 // import { Service } from 'typedi';
 
 // @Service()
@@ -11,54 +12,53 @@ export default class UserService {
   //   private salaryModel) { }
   // constructor(private user: User) { }
 
-  public async getUserById(id: string) {
+  async getUserById(id: string) {
     try {
-      const userRecord = await User.findByPk(id);
+      const userRecord = await User.findByPk(id, { rejectOnEmpty: true });
 
       return userRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: getUserById', ...e });
     }
   }
-  public async deleteUserById(id: string) {
+  async deleteUserById(id: string) {
     try {
       const userRecord = await User.update({ isDeleted: true }, {
         where: {
-          id: id,
-        },
+          id
+        }
       });
 
       return userRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: deleteUserById', ...e });
     }
   }
-  public async addUser(data: UserCreationAttributes) {
+  async addUser(data: UserCreationAttributes) {
     try {
       const user = await User.create({ ...data, isDeleted: false });
       return user;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: addUser', ...e });
     }
-
   }
-  public async getAutoSuggestUsers(loginSubstring: string, limit: number) {
+  async getAutoSuggestUsers(loginSubstring: string, limit: number) {
     try {
       const filteredUsers = await User.findAll({
         where: {
           login: {
-            [Op.like]: `%${loginSubstring}%`,
+            [Op.like]: `%${loginSubstring}%`
           }
         },
         limit,
         order: [
-          ['login', 'ASC'],
-        ],
+          ['login', 'ASC']
+        ]
       });
 
       return filteredUsers;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: getAutoSuggestUsers', ...e });
     }
-  };
+  }
 }

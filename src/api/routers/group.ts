@@ -8,50 +8,51 @@ export const groupRouter = Router();
 
 const groupService = new GroupService();
 
-groupRouter.get<ParamsWithId>('/all', async (req, res) => {
+groupRouter.get<ParamsWithId>('/all', async (_req, res, next) => {
   try {
     const groups = await groupService.getAllGroups();
 
     res.send(groups);
   } catch (e) {
-    res.sendStatus(500);
+    return next(e);
   }
 });
 
-groupRouter.get<ParamsWithId>('/:id', async (req, res) => {
+groupRouter.get<ParamsWithId>('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const group = await groupService.getGroupById(id);
 
     res.send(group);
   } catch (e) {
-    res.sendStatus(500);
+    return next(e);
   }
 });
 
-groupRouter.delete<ParamsWithId>('/:id', async (req, res) => {
+groupRouter.delete<ParamsWithId>('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const group = await groupService.deleteGroupById(id);
 
-    res.send({ deletedRows: group});
+    res.send({ deletedRows: group });
   } catch (e) {
-    res.sendStatus(500);
+    return next(e);
   }
 });
 
 groupRouter.post<null, any, GroupCreatingInterface>(
   '/:id',
   groupBodyValidator,
-  async (req: ValidatedRequest<GroupRequestSchema>, res) => {
+  async (req: ValidatedRequest<GroupRequestSchema>, res, next) => {
     try {
       const { body } = req;
       const { id } = req.params;
 
-      const user = await groupService.updateGroup(id, body)
-      res.send(user);
+      const group = await groupService.updateGroup(id, body);
+
+      res.send(group);
     } catch (e) {
-      res.status(500);
+      return next(e);
     }
   }
 );
@@ -59,14 +60,15 @@ groupRouter.post<null, any, GroupCreatingInterface>(
 groupRouter.put<null, any, GroupCreatingInterface>(
   '/',
   groupBodyValidator,
-  async (req: ValidatedRequest<GroupRequestSchema>, res) => {
+  async (req: ValidatedRequest<GroupRequestSchema>, res, next) => {
     try {
       const { body } = req;
 
-      const user = await groupService.addGroup(body)
-      res.send(user);
+      const group = await groupService.addGroup(body);
+
+      res.send(group);
     } catch (e) {
-      res.status(500);
+      return next(e);
     }
   }
 );
