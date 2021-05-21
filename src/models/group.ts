@@ -33,7 +33,7 @@ Group.init(
       unique: true,
     },
     permission: {
-      type: DataTypes.ENUM({ values: PERMISSIONS }),
+      type: DataTypes.ARRAY(DataTypes.ENUM({ values: PERMISSIONS })),
       allowNull: false,
     },
   },

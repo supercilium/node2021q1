@@ -43,8 +43,8 @@ export default class UserGroupService {
 
       // return group;
       return result.getUsers({ joinTableAttributes: [] });
-    } catch (error) {
-      throw (error);
+    } catch (e) {
+      throw ({ service: 'SERVICE: deleteGroupById', parameters: { groupId, userIds }, ...e });
     }
   }
 }

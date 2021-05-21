@@ -1,6 +1,5 @@
 import { Group } from '../models/group';
 import { GroupCreatingInterface } from 'types';
-import { logger } from '../configs';
 
 export default class GroupService {
   async getGroupById(id: string) {
@@ -9,8 +8,7 @@ export default class GroupService {
 
       return groupRecord;
     } catch (e) {
-      logger.debug(e);
-      throw (e);
+      throw ({ service: 'SERVICE: getGroupById', parameters: { id }, ...e });
     }
   }
   async getAllGroups() {
@@ -19,7 +17,7 @@ export default class GroupService {
 
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: getAllGroups', ...e });
     }
   }
   async deleteGroupById(id: string) {
@@ -32,7 +30,7 @@ export default class GroupService {
 
       return statusCode;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: deleteGroupById', parameters: { id }, ...e });
     }
   }
   async addGroup(data: GroupCreatingInterface) {
@@ -40,7 +38,7 @@ export default class GroupService {
       const groupRecord = await Group.create({ ...data });
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: addGroup', parameters: { ...data }, ...e });
     }
   }
   async updateGroup(id: string, data: GroupCreatingInterface) {
@@ -52,7 +50,7 @@ export default class GroupService {
       });
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: updateGroup', parameters: { ...data }, ...e });
     }
   }
 }

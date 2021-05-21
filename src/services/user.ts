@@ -18,7 +18,7 @@ export default class UserService {
 
       return userRecord;
     } catch (e) {
-      throw ({ service: 'SERVICE: getUserById', ...e });
+      throw ({ service: 'SERVICE: getUserById', parameters: { id }, ...e });
     }
   }
   async deleteUserById(id: string) {
@@ -31,7 +31,7 @@ export default class UserService {
 
       return userRecord;
     } catch (e) {
-      throw ({ service: 'SERVICE: deleteUserById', ...e });
+      throw ({ service: 'SERVICE: deleteUserById', parameters: { id }, ...e });
     }
   }
   async addUser(data: UserCreationAttributes) {
@@ -39,7 +39,7 @@ export default class UserService {
       const user = await User.create({ ...data, isDeleted: false });
       return user;
     } catch (e) {
-      throw ({ service: 'SERVICE: addUser', ...e });
+      throw ({ service: 'SERVICE: addUser', parameters: { ...data }, ...e });
     }
   }
   async getAutoSuggestUsers(loginSubstring: string, limit: number) {
@@ -58,7 +58,7 @@ export default class UserService {
 
       return filteredUsers;
     } catch (e) {
-      throw ({ service: 'SERVICE: getAutoSuggestUsers', ...e });
+      throw ({ service: 'SERVICE: getAutoSuggestUsers', parameters: { loginSubstring, limit }, ...e });
     }
   }
 }
