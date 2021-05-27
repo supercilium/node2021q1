@@ -2,56 +2,55 @@ import { Group } from '../models/group';
 import { GroupCreatingInterface } from 'types';
 
 export default class GroupService {
-  public async getGroupById(id: string) {
+  async getGroupById(id: string) {
     try {
-      const groupRecord = await Group.findByPk(id);
+      const groupRecord = await Group.findByPk(id, { rejectOnEmpty: true });
 
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: getGroupById', parameters: { id }, ...e });
     }
   }
-  public async getAllGroups() {
+  async getAllGroups() {
     try {
       const groupRecord = await Group.findAll({});
 
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: getAllGroups', ...e });
     }
   }
-  public async deleteGroupById(id: string) {
+  async deleteGroupById(id: string) {
     try {
       const statusCode = await Group.destroy({
         where: {
-          id: id,
-        },
+          id
+        }
       });
 
       return statusCode;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: deleteGroupById', parameters: { id }, ...e });
     }
   }
-  public async addGroup(data: GroupCreatingInterface) {
+  async addGroup(data: GroupCreatingInterface) {
     try {
       const groupRecord = await Group.create({ ...data });
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: addGroup', parameters: { ...data }, ...e });
     }
   }
-  public async updateGroup(id: string, data: GroupCreatingInterface) {
+  async updateGroup(id: string, data: GroupCreatingInterface) {
     try {
       const groupRecord = await Group.update({ ...data }, {
         where: {
-          id: id
+          id
         }
       });
       return groupRecord;
     } catch (e) {
-      throw (e);
+      throw ({ service: 'SERVICE: updateGroup', parameters: { ...data }, ...e });
     }
   }
-
 }
