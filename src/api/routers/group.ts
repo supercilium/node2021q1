@@ -2,28 +2,14 @@ import { Router } from 'express';
 import { ParamsWithId, GroupCreatingInterface, GroupRequestSchema } from '../../types';
 import { ValidatedRequest } from 'express-joi-validation';
 import { groupBodyValidator } from '../middlewares/validation';
-import GroupService from '../../services/group';
 import { tryCatchWrapper } from '../../utils';
+import { groupService, getAllGroupsController, getGroupController } from '../../controllers/group';
 
 export const groupRouter = Router();
 
-const groupService = new GroupService();
+groupRouter.get('/all', getAllGroupsController);
 
-groupRouter.get<ParamsWithId>('/all', async (_req, res, next) => {
-  await tryCatchWrapper(async () => {
-    const groups = await groupService.getAllGroups();
-    res.send(groups);
-  }, next);
-});
-
-groupRouter.get<ParamsWithId>('/:id', async (req, res, next) => {
-  await tryCatchWrapper(async () => {
-    const { id } = req.params;
-    const group = await groupService.getGroupById(id);
-
-    res.send(group);
-  }, next);
-});
+groupRouter.get<ParamsWithId>('/:id', getGroupController);
 
 groupRouter.delete<ParamsWithId>('/:id', async (req, res, next) => {
   await tryCatchWrapper(async () => {
